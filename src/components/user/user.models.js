@@ -22,7 +22,7 @@ export const obtenerUsuarios = async () => {
 
 export const registrarUsuarios = async (datos) => {
   try {
-    const { 
+    let { 
       name,
       email,
       password,
@@ -30,6 +30,7 @@ export const registrarUsuarios = async (datos) => {
       bio,
       isPremium = false
     } = datos;
+    email=email.toLowerCase();
     
     const nuevoUsuario = await prisma.user.create({
       data: {
@@ -49,7 +50,7 @@ export const registrarUsuarios = async (datos) => {
 };
 
 export const updateUsuario = async (user) => {
-  const {
+  let {
     name,
     email,
     password,
@@ -61,7 +62,7 @@ export const updateUsuario = async (user) => {
   try {
     const updateData = {};
     if (name) updateData.name = name;
-    if (email) updateData.email = email;
+    if (email) updateData.email = email.toLowerCase();
     if (password) updateData.password = password;
     if (image !== undefined) updateData.image = image;
     if (bio !== undefined) updateData.bio = bio;

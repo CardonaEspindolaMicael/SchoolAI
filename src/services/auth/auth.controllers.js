@@ -13,7 +13,9 @@ export const verifyToken = async (token) => {
 export const loginUser = async (req, res) => {
     let { email, password } = req.body;
     email = email?.toLowerCase().trim(); 
+    console.log(email)
     const result = await obtenerUsuarioPorSuCorreo(email)
+   
     if (!!!result) {
       return res.status(201).json({ message: "El usuario no se encontro!" , success:false}); // Not Found
     }
