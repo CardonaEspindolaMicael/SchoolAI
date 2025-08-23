@@ -11,43 +11,45 @@
  *       properties:
  *         id:
  *           type: string
- *           description: The auto-generated id of the user
- *           example: "507f1f77bcf86cd799439011"
+ *           format: uuid
+ *           description: The auto-generated UUID of the user
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
  *         name:
  *           type: string
+ *           maxLength: 100
  *           description: The user's full name
  *           example: "John Doe"
  *         email:
  *           type: string
  *           format: email
- *           description: The user's email address
+ *           maxLength: 255
+ *           description: The user's email address (unique)
  *           example: "john.doe@example.com"
  *         password:
  *           type: string
- *           minLength: 6
- *           description: The user's password (min 6 characters)
- *           example: "password123"
+ *           maxLength: 255
+ *           description: The user's hashed password
+ *           example: "$2b$10$hashedpasswordstring"
  *         image:
  *           type: string
+ *           nullable: true
  *           description: URL to user's profile image
  *           example: "https://example.com/avatar.jpg"
  *         bio:
  *           type: string
+ *           nullable: true
  *           description: User's biography
- *           example: "Software developer passionate about blockchain"
- *         isPremium:
- *           type: boolean
- *           description: Whether the user has premium status
- *           default: false
- *           example: false
+ *           example: "Experienced teacher passionate about mathematics"
  *         createdAt:
  *           type: string
  *           format: date-time
  *           description: User creation timestamp
+ *           example: "2024-01-01T00:00:00.000Z"
  *         updatedAt:
  *           type: string
  *           format: date-time
  *           description: User last update timestamp
+ *           example: "2024-01-01T00:00:00.000Z"
  *     
  *     UserCreate:
  *       type: object
@@ -59,16 +61,19 @@
  *         name:
  *           type: string
  *           minLength: 1
+ *           maxLength: 100
  *           description: The user's full name
- *           example: "John Doe"
+ *           example: "Jane Smith"
  *         email:
  *           type: string
  *           format: email
+ *           maxLength: 255
  *           description: The user's email address
- *           example: "john.doe@example.com"
+ *           example: "jane.smith@example.com"
  *         password:
  *           type: string
  *           minLength: 6
+ *           maxLength: 255
  *           description: The user's password (min 6 characters)
  *           example: "password123"
  *         image:
@@ -78,33 +83,32 @@
  *         bio:
  *           type: string
  *           description: User's biography
- *           example: "Software developer passionate about blockchain"
- *         isPremium:
- *           type: boolean
- *           description: Whether the user has premium status
- *           default: false
- *           example: false
+ *           example: "Mathematics teacher with 10 years of experience"
  *     
  *     UserUpdate:
  *       type: object
  *       properties:
  *         id:
  *           type: string
- *           description: The user's ID
- *           example: "507f1f77bcf86cd799439011"
+ *           format: uuid
+ *           description: The user's UUID
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
  *         name:
  *           type: string
  *           minLength: 1
+ *           maxLength: 100
  *           description: The user's full name
  *           example: "John Doe Updated"
  *         email:
  *           type: string
  *           format: email
+ *           maxLength: 255
  *           description: The user's email address
  *           example: "john.updated@example.com"
  *         password:
  *           type: string
  *           minLength: 6
+ *           maxLength: 255
  *           description: The user's new password (min 6 characters)
  *           example: "newpassword123"
  *         image:
@@ -115,10 +119,6 @@
  *           type: string
  *           description: User's biography
  *           example: "Updated bio"
- *         isPremium:
- *           type: boolean
- *           description: Whether the user has premium status
- *           example: true
  *     
  *     PasswordChange:
  *       type: object
@@ -129,8 +129,9 @@
  *       properties:
  *         id:
  *           type: string
- *           description: The user's ID
- *           example: "507f1f77bcf86cd799439011"
+ *           format: uuid
+ *           description: The user's UUID
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
  *         currentPassword:
  *           type: string
  *           description: Current password for verification
@@ -138,6 +139,7 @@
  *         newPassword:
  *           type: string
  *           minLength: 6
+ *           maxLength: 255
  *           description: New password (min 6 characters)
  *           example: "newpassword123"
  *     
@@ -149,12 +151,14 @@
  *       properties:
  *         userId:
  *           type: string
- *           description: The user's ID
- *           example: "507f1f77bcf86cd799439011"
+ *           format: uuid
+ *           description: The user's UUID
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
  *         roleId:
  *           type: string
- *           description: The role's ID to assign
- *           example: "507f1f77bcf86cd799439012"
+ *           format: uuid
+ *           description: The role's UUID to assign
+ *           example: "456e7890-e89b-12d3-a456-426614174001"
  *     
  *     RoleRemoval:
  *       type: object
@@ -164,12 +168,14 @@
  *       properties:
  *         userId:
  *           type: string
- *           description: The user's ID
- *           example: "507f1f77bcf86cd799439011"
+ *           format: uuid
+ *           description: The user's UUID
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
  *         roleId:
  *           type: string
- *           description: The role's ID to remove
- *           example: "507f1f77bcf86cd799439012"
+ *           format: uuid
+ *           description: The role's UUID to remove
+ *           example: "456e7890-e89b-12d3-a456-426614174001"
  *     
  *     Error:
  *       type: object
@@ -211,7 +217,7 @@
  * @swagger
  * tags:
  *   name: Users
- *   description: User management endpoints
+ *   description: User management endpoints for the educational platform
  */
 
 /**
@@ -219,7 +225,7 @@
  * /usuario:
  *   get:
  *     summary: Get all users
- *     description: Retrieve a list of all users in the system
+ *     description: Retrieve a list of all users in the educational platform
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -233,12 +239,11 @@
  *               items:
  *                 $ref: '#/components/schemas/User'
  *             example:
- *               - id: "507f1f77bcf86cd799439011"
+ *               - id: "123e4567-e89b-12d3-a456-426614174000"
  *                 name: "John Doe"
  *                 email: "john.doe@example.com"
  *                 image: "https://example.com/avatar.jpg"
- *                 bio: "Software developer"
- *                 isPremium: false
+ *                 bio: "Mathematics teacher"
  *                 createdAt: "2024-01-01T00:00:00.000Z"
  *                 updatedAt: "2024-01-01T00:00:00.000Z"
  *       500:
@@ -250,7 +255,7 @@
  *   
  *   post:
  *     summary: Create a new user
- *     description: Register a new user in the system
+ *     description: Register a new user in the educational platform
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -263,8 +268,7 @@
  *             email: "jane.smith@example.com"
  *             password: "password123"
  *             image: "https://example.com/avatar.jpg"
- *             bio: "Blockchain enthusiast"
- *             isPremium: false
+ *             bio: "Science teacher with 5 years experience"
  *     responses:
  *       200:
  *         description: User created successfully
@@ -278,7 +282,8 @@
  *                   example: "Usuario registrado con éxito!"
  *                 id:
  *                   type: string
- *                   example: "507f1f77bcf86cd799439011"
+ *                   format: uuid
+ *                   example: "123e4567-e89b-12d3-a456-426614174000"
  *                 name:
  *                   type: string
  *                   example: "Jane Smith"
@@ -311,11 +316,10 @@
  *           schema:
  *             $ref: '#/components/schemas/UserUpdate'
  *           example:
- *             id: "507f1f77bcf86cd799439011"
+ *             id: "123e4567-e89b-12d3-a456-426614174000"
  *             name: "John Doe Updated"
  *             email: "john.updated@example.com"
  *             bio: "Updated bio"
- *             isPremium: true
  *     responses:
  *       200:
  *         description: User updated successfully
@@ -329,7 +333,8 @@
  *                   example: "Usuario actualizado con éxito!"
  *                 id:
  *                   type: string
- *                   example: "507f1f77bcf86cd799439011"
+ *                   format: uuid
+ *                   example: "123e4567-e89b-12d3-a456-426614174000"
  *       400:
  *         description: Validation error
  *         content:
@@ -363,10 +368,9 @@
  *               items:
  *                 $ref: '#/components/schemas/User'
  *             example:
- *               - id: "507f1f77bcf86cd799439011"
+ *               - id: "123e4567-e89b-12d3-a456-426614174000"
  *                 name: "Premium User"
  *                 email: "premium@example.com"
- *                 isPremium: true
  *                 createdAt: "2024-01-01T00:00:00.000Z"
  *       500:
  *         description: Internal server error
@@ -420,7 +424,7 @@
  * /usuario/{id}:
  *   get:
  *     summary: Get user by ID
- *     description: Retrieve a user by their unique ID
+ *     description: Retrieve a user by their unique UUID
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
@@ -430,8 +434,9 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: User's unique ID
- *         example: "507f1f77bcf86cd799439011"
+ *           format: uuid
+ *         description: User's unique UUID
+ *         example: "123e4567-e89b-12d3-a456-426614174000"
  *     responses:
  *       200:
  *         description: User found successfully
@@ -464,8 +469,9 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: User's unique ID to delete
- *         example: "507f1f77bcf86cd799439011"
+ *           format: uuid
+ *         description: User's unique UUID to delete
+ *         example: "123e4567-e89b-12d3-a456-426614174000"
  *     responses:
  *       200:
  *         description: User deleted successfully
@@ -499,7 +505,7 @@
  *           schema:
  *             $ref: '#/components/schemas/PasswordChange'
  *           example:
- *             id: "507f1f77bcf86cd799439011"
+ *             id: "123e4567-e89b-12d3-a456-426614174000"
  *             currentPassword: "oldpassword123"
  *             newPassword: "newpassword123"
  *     responses:
@@ -545,10 +551,11 @@
  *             properties:
  *               id:
  *                 type: string
- *                 description: User's ID
- *                 example: "507f1f77bcf86cd799439011"
+ *                 format: uuid
+ *                 description: User's UUID
+ *                 example: "123e4567-e89b-12d3-a456-426614174000"
  *           example:
- *             id: "507f1f77bcf86cd799439011"
+ *             id: "123e4567-e89b-12d3-a456-426614174000"
  *     responses:
  *       200:
  *         description: Token renewed successfully
@@ -583,8 +590,8 @@
  *           schema:
  *             $ref: '#/components/schemas/RoleAssignment'
  *           example:
- *             userId: "507f1f77bcf86cd799439011"
- *             roleId: "507f1f77bcf86cd799439012"
+ *             userId: "123e4567-e89b-12d3-a456-426614174000"
+ *             roleId: "456e7890-e89b-12d3-a456-426614174001"
  *     responses:
  *       200:
  *         description: Role assigned successfully
@@ -624,8 +631,8 @@
  *           schema:
  *             $ref: '#/components/schemas/RoleRemoval'
  *           example:
- *             userId: "507f1f77bcf86cd799439011"
- *             roleId: "507f1f77bcf86cd799439012"
+ *             userId: "123e4567-e89b-12d3-a456-426614174000"
+ *             roleId: "456e7890-e89b-12d3-a456-426614174001"
  *     responses:
  *       200:
  *         description: Role removed successfully

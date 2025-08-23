@@ -11,33 +11,22 @@
  *       properties:
  *         id:
  *           type: string
- *           description: The auto-generated id of the role
- *           example: "507f1f77bcf86cd799439012"
+ *           format: uuid
+ *           description: The auto-generated UUID of the role
+ *           example: "456e7890-e89b-12d3-a456-426614174001"
  *         name:
  *           type: string
- *           description: The role's name
- *           example: "admin"
+ *           maxLength: 50
+ *           description: The role's name (unique)
+ *           example: "teacher"
  *         description:
  *           type: string
  *           description: The role's description
- *           example: "Administrator with full system access"
+ *           example: "Teacher with classroom management permissions"
  *         permissions:
  *           type: string
- *           description: The role's permissions (comma-separated)
- *           example: "read,write,delete,admin"
- *         isActive:
- *           type: boolean
- *           description: Whether the role is active
- *           default: true
- *           example: true
- *         createdAt:
- *           type: string
- *           format: date-time
- *           description: Role creation timestamp
- *         updatedAt:
- *           type: string
- *           format: date-time
- *           description: Role last update timestamp
+ *           description: JSON string containing role permissions
+ *           example: '{"read": true, "write": true, "delete": false, "admin": false}'
  *     
  *     RoleCreate:
  *       type: object
@@ -49,18 +38,19 @@
  *         name:
  *           type: string
  *           minLength: 1
- *           description: The role's name
- *           example: "moderator"
+ *           maxLength: 50
+ *           description: The role's name (must be unique)
+ *           example: "student"
  *         description:
  *           type: string
  *           minLength: 5
  *           description: The role's description (min 5 characters)
- *           example: "Moderator with content management permissions"
+ *           example: "Student with basic access permissions"
  *         permissions:
  *           type: string
  *           minLength: 1
- *           description: The role's permissions (comma-separated)
- *           example: "read,write,moderate"
+ *           description: JSON string containing role permissions
+ *           example: '{"read": true, "write": false, "delete": false, "admin": false}'
  *     
  *     RoleUpdate:
  *       type: object
@@ -69,35 +59,34 @@
  *       properties:
  *         id:
  *           type: string
- *           description: The role's ID
- *           example: "507f1f77bcf86cd799439012"
+ *           format: uuid
+ *           description: The role's UUID
+ *           example: "456e7890-e89b-12d3-a456-426614174001"
  *         name:
  *           type: string
  *           minLength: 1
- *           description: The role's name
- *           example: "senior_moderator"
+ *           maxLength: 50
+ *           description: The role's name (must be unique)
+ *           example: "senior_teacher"
  *         description:
  *           type: string
  *           minLength: 5
  *           description: The role's description (min 5 characters)
- *           example: "Senior moderator with advanced permissions"
+ *           example: "Senior teacher with advanced permissions"
  *         permissions:
  *           type: string
  *           minLength: 1
- *           description: The role's permissions (comma-separated)
- *           example: "read,write,moderate,delete"
- *         isActive:
- *           type: boolean
- *           description: Whether the role is active
- *           example: true
+ *           description: JSON string containing role permissions
+ *           example: '{"read": true, "write": true, "delete": true, "admin": false}'
  *     
  *     UserWithRole:
  *       type: object
  *       properties:
  *         id:
  *           type: string
- *           description: The user's ID
- *           example: "507f1f77bcf86cd799439011"
+ *           format: uuid
+ *           description: The user's UUID
+ *           example: "123e4567-e89b-12d3-a456-426614174000"
  *         name:
  *           type: string
  *           description: The user's name
@@ -108,12 +97,13 @@
  *           example: "john.doe@example.com"
  *         roleId:
  *           type: string
- *           description: The assigned role ID
- *           example: "507f1f77bcf86cd799439012"
+ *           format: uuid
+ *           description: The assigned role UUID
+ *           example: "456e7890-e89b-12d3-a456-426614174001"
  *         roleName:
  *           type: string
  *           description: The assigned role name
- *           example: "admin"
+ *           example: "teacher"
  *     
  *     Error:
  *       type: object
@@ -155,7 +145,7 @@
  * @swagger
  * tags:
  *   name: Roles
- *   description: Role management endpoints
+ *   description: Role management endpoints for the educational platform
  */
 
 /**
@@ -163,7 +153,7 @@
  * /roles:
  *   get:
  *     summary: Get all roles
- *     description: Retrieve a list of all roles in the system
+ *     description: Retrieve a list of all roles in the educational platform
  *     tags: [Roles]
  *     security:
  *       - bearerAuth: []
@@ -177,20 +167,14 @@
  *               items:
  *                 $ref: '#/components/schemas/Role'
  *             example:
- *               - id: "507f1f77bcf86cd799439012"
- *                 name: "admin"
- *                 description: "Administrator with full system access"
- *                 permissions: "read,write,delete,admin"
- *                 isActive: true
- *                 createdAt: "2024-01-01T00:00:00.000Z"
- *                 updatedAt: "2024-01-01T00:00:00.000Z"
- *               - id: "507f1f77bcf86cd799439013"
- *                 name: "moderator"
- *                 description: "Moderator with content management permissions"
- *                 permissions: "read,write,moderate"
- *                 isActive: true
- *                 createdAt: "2024-01-01T00:00:00.000Z"
- *                 updatedAt: "2024-01-01T00:00:00.000Z"
+ *               - id: "456e7890-e89b-12d3-a456-426614174001"
+ *                 name: "teacher"
+ *                 description: "Teacher with classroom management permissions"
+ *                 permissions: '{"read": true, "write": true, "delete": false, "admin": false}'
+ *               - id: "456e7890-e89b-12d3-a456-426614174002"
+ *                 name: "student"
+ *                 description: "Student with basic access permissions"
+ *                 permissions: '{"read": true, "write": false, "delete": false, "admin": false}'
  *       500:
  *         description: Internal server error
  *         content:
@@ -200,7 +184,7 @@
  *   
  *   post:
  *     summary: Create a new role
- *     description: Create a new role in the system
+ *     description: Create a new role in the educational platform
  *     tags: [Roles]
  *     security:
  *       - bearerAuth: []
@@ -211,9 +195,9 @@
  *           schema:
  *             $ref: '#/components/schemas/RoleCreate'
  *           example:
- *             name: "editor"
- *             description: "Editor with content creation and editing permissions"
- *             permissions: "read,write,edit"
+ *             name: "admin"
+ *             description: "Administrator with full system access"
+ *             permissions: '{"read": true, "write": true, "delete": true, "admin": true}'
  *     responses:
  *       200:
  *         description: Role created successfully
@@ -227,13 +211,14 @@
  *                   example: "Rol creado con éxito!"
  *                 id:
  *                   type: string
- *                   example: "507f1f77bcf86cd799439014"
+ *                   format: uuid
+ *                   example: "456e7890-e89b-12d3-a456-426614174003"
  *                 name:
  *                   type: string
- *                   example: "editor"
+ *                   example: "admin"
  *                 description:
  *                   type: string
- *                   example: "Editor with content creation and editing permissions"
+ *                   example: "Administrator with full system access"
  *       400:
  *         description: Validation error
  *         content:
@@ -260,11 +245,10 @@
  *           schema:
  *             $ref: '#/components/schemas/RoleUpdate'
  *           example:
- *             id: "507f1f77bcf86cd799439012"
- *             name: "senior_admin"
- *             description: "Senior administrator with enhanced permissions"
- *             permissions: "read,write,delete,admin,super"
- *             isActive: true
+ *             id: "456e7890-e89b-12d3-a456-426614174001"
+ *             name: "senior_teacher"
+ *             description: "Senior teacher with advanced permissions"
+ *             permissions: '{"read": true, "write": true, "delete": true, "admin": false}'
  *     responses:
  *       200:
  *         description: Role updated successfully
@@ -278,7 +262,8 @@
  *                   example: "Rol actualizado con éxito!"
  *                 id:
  *                   type: string
- *                   example: "507f1f77bcf86cd799439012"
+ *                   format: uuid
+ *                   example: "456e7890-e89b-12d3-a456-426614174001"
  *       400:
  *         description: Validation error
  *         content:
@@ -312,12 +297,10 @@
  *               items:
  *                 $ref: '#/components/schemas/Role'
  *             example:
- *               - id: "507f1f77bcf86cd799439012"
- *                 name: "admin"
- *                 description: "Administrator with full system access"
- *                 permissions: "read,write,delete,admin"
- *                 isActive: true
- *                 createdAt: "2024-01-01T00:00:00.000Z"
+ *               - id: "456e7890-e89b-12d3-a456-426614174001"
+ *                 name: "teacher"
+ *                 description: "Teacher with classroom management permissions"
+ *                 permissions: '{"read": true, "write": true, "delete": false, "admin": false}'
  *       500:
  *         description: Internal server error
  *         content:
@@ -352,11 +335,10 @@
  *               items:
  *                 $ref: '#/components/schemas/Role'
  *             example:
- *               - id: "507f1f77bcf86cd799439012"
- *                 name: "admin"
- *                 description: "Administrator with full system access"
- *                 permissions: "read,write,delete,admin"
- *                 isActive: true
+ *               - id: "456e7890-e89b-12d3-a456-426614174001"
+ *                 name: "teacher"
+ *                 description: "Teacher with classroom management permissions"
+ *                 permissions: '{"read": true, "write": true, "delete": false, "admin": false}'
  *       500:
  *         description: Internal server error
  *         content:
@@ -380,8 +362,9 @@
  *         required: true
  *         schema:
  *           type: string
+ *           maxLength: 50
  *         description: Role's name
- *         example: "admin"
+ *         example: "teacher"
  *     responses:
  *       200:
  *         description: Role found successfully
@@ -418,8 +401,9 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: Role's ID to find users for
- *         example: "507f1f77bcf86cd799439012"
+ *           format: uuid
+ *         description: Role's UUID to find users for
+ *         example: "456e7890-e89b-12d3-a456-426614174001"
  *     responses:
  *       200:
  *         description: Users with role retrieved successfully
@@ -430,11 +414,11 @@
  *               items:
  *                 $ref: '#/components/schemas/UserWithRole'
  *             example:
- *               - id: "507f1f77bcf86cd799439011"
+ *               - id: "123e4567-e89b-12d3-a456-426614174000"
  *                 name: "John Doe"
  *                 email: "john.doe@example.com"
- *                 roleId: "507f1f77bcf86cd799439012"
- *                 roleName: "admin"
+ *                 roleId: "456e7890-e89b-12d3-a456-426614174001"
+ *                 roleName: "teacher"
  *       500:
  *         description: Internal server error
  *         content:
@@ -448,7 +432,7 @@
  * /roles/{id}:
  *   get:
  *     summary: Get role by ID
- *     description: Retrieve a role by its unique ID
+ *     description: Retrieve a role by its unique UUID
  *     tags: [Roles]
  *     security:
  *       - bearerAuth: []
@@ -458,8 +442,9 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: Role's unique ID
- *         example: "507f1f77bcf86cd799439012"
+ *           format: uuid
+ *         description: Role's unique UUID
+ *         example: "456e7890-e89b-12d3-a456-426614174001"
  *     responses:
  *       200:
  *         description: Role found successfully
@@ -492,8 +477,9 @@
  *         required: true
  *         schema:
  *           type: string
- *         description: Role's unique ID to delete
- *         example: "507f1f77bcf86cd799439012"
+ *           format: uuid
+ *         description: Role's unique UUID to delete
+ *         example: "456e7890-e89b-12d3-a456-426614174001"
  *     responses:
  *       200:
  *         description: Role deleted successfully
