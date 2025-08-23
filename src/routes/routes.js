@@ -9,6 +9,7 @@ import routerClassAssignment from "../components/classAssignment/classAssignment
 import routerProgress from "../components/progress/progress.routes.js";
 import routerSchedule from "../components/schedule/schedule.routes.js";
 import routerAIFeedback from "../components/aiFeedback/aiFeedback.routes.js";
+import routerAIWritingAssistant from "../components/AI/aiWritingAssistant.routes.js";
 
 const router = Router(); 
 router.use('/usuario', routerUser); 
@@ -21,6 +22,7 @@ router.use('/class-assignments', routerClassAssignment);
 router.use('/progress', routerProgress);
 router.use('/schedules', routerSchedule);
 router.use('/ai-feedback', routerAIFeedback);
+router.use('/ai-writing-assistant', routerAIWritingAssistant);
 
 export default router;
 

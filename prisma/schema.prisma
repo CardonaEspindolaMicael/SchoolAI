@@ -161,12 +161,12 @@ model AIFeedBack {
   subtopicId      String
   timeMinutes     Int      // total lesson time
   stepNumber      Int      // order of steps
-  stepName        String   @db.VarChar(50)
+  stepName        String   @db.VarChar(100)
   content         String   @db.Text
-  studentActivity String?  @db.VarChar(255)
-  timeAllocation  Int      // minutes for this step
-  materialsNeeded String?  @db.VarChar(200)
-  successIndicator String? @db.VarChar(200)
+  studentActivity String?  @db.VarChar(455)
+  timeAllocation  String   @db.VarChar(455)  // minutes for this step
+  materialsNeeded String?  @db.VarChar(400)
+  successIndicator String? @db.VarChar(400)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
