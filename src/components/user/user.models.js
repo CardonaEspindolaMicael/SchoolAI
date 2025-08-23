@@ -27,8 +27,7 @@ export const registrarUsuarios = async (datos) => {
       email,
       password,
       image,
-      bio,
-      isPremium = false
+      bio
     } = datos;
     email=email.toLowerCase();
     
@@ -38,8 +37,7 @@ export const registrarUsuarios = async (datos) => {
         email,
         password,
         image,
-        bio,
-        isPremium
+        bio
       }
     });
     return nuevoUsuario;
@@ -55,8 +53,7 @@ export const updateUsuario = async (user) => {
     email,
     password,
     image,
-    bio,
-    isPremium
+    bio
   } = user;
 
   try {
@@ -66,7 +63,6 @@ export const updateUsuario = async (user) => {
     if (password) updateData.password = password;
     if (image !== undefined) updateData.image = image;
     if (bio !== undefined) updateData.bio = bio;
-    if (isPremium !== undefined) updateData.isPremium = isPremium;
 
     const usuarioActualizado = await prisma.user.update({
       where: { email },
@@ -207,24 +203,6 @@ export const removerRolUsuario = async (userId, roleId) => {
   }
 };
 
-export const obtenerUsuariosPremium = async () => {
-  try {
-    const usuarios = await prisma.user.findMany({
-      where: { isPremium: true },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        image: true,
-        isPremium: true,
-        createdAt: true
-      }
-    });
-    return usuarios;
-  } catch (error) {
-    console.error(error);
-    return error;
-  }
-};
+
 
 

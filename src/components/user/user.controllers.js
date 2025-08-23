@@ -9,8 +9,7 @@ import {
   obtenerUsuariosById,
   obtenerUsuarioPorSuCorreo,
   asignarRolUsuario,
-  removerRolUsuario,
-  obtenerUsuariosPremium,
+  removerRolUsuario
 } from "./user.models.js";
 import bcrypt from "bcrypt";
 import { registrarUsuarioSchema } from "./dto/userCreate.dto.js";
@@ -181,13 +180,6 @@ export const removerRol = async (req, res) => {
   }
 };
 
-export const getUsuariosPremium = async (req, res) => {
-  try {
-    const response = await obtenerUsuariosPremium();
-    res.status(200).json(response);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+
 
 
