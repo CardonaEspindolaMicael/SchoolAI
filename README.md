@@ -320,8 +320,6 @@ This hackathon project demonstrates:
 - **Security**: JWT authentication and role-based access control
 - **Documentation**: Comprehensive API documentation with Swagger
 - **Database Design**: Well-structured PostgreSQL schema for educational data
-- **Blockchain Ready**: Infrastructure for blockchain integration
-- **Real-time Features**: WebSocket support for live updates
 - **File Management**: Secure file upload and management system
 
 The platform successfully combines cutting-edge AI technology with traditional educational management, creating a powerful tool for modern education.

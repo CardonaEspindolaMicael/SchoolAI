@@ -5,7 +5,6 @@ import { validateAIFeedbackGeneration } from './dto/aiFeedbackGeneration.dto.js'
 import { generateAIFeedbackPrompt } from './prompts/aiFeedbackGeneration.prompt.js';
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY);
-console.log(process.env.GOOGLE_GENERATIVE_AI_API_KEY)
 // Helper function to clean and parse JSON
 const cleanJsonString = (text) => {
   // Remove markdown code blocks if present
