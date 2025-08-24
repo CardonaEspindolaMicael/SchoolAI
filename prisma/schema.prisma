@@ -169,6 +169,7 @@ model AIFeedBack {
   successIndicator String? @db.VarChar(400)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  status          Boolean     @default(false)
 
   subtopic Subtopic @relation(fields: [subtopicId], references: [id], onDelete: Cascade)
 
