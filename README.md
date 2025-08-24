@@ -65,7 +65,7 @@ BackFigma/
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/CardonaEspindolaMicael/SchoolAI.git
 cd BackFigma
 ```
 
